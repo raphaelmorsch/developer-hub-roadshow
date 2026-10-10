@@ -1,0 +1,153 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: roadshow
+  title: Roadshow Digital
+  description: Roadshow Digital — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: root
+  profile:
+    displayName: Roadshow Digital
+  children:
+    - group:default/digital
+    - group:default/platform
+  members: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: digital
+  title: Negócios digitais
+  description: Negócios digitais — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: business-unit
+  profile:
+    displayName: Negócios digitais
+  parent: group:default/roadshow
+  children:
+    - group:default/commerce
+  members: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: commerce
+  title: Área de comércio
+  description: Área de comércio — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: product-area
+  profile:
+    displayName: Área de comércio
+  parent: group:default/digital
+  children:
+    - group:default/orders-team
+    - group:default/payments-team
+  members: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: orders-team
+  title: Equipe de pedidos
+  description: Equipe de pedidos — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: team
+  profile:
+    displayName: Equipe de pedidos
+  parent: group:default/commerce
+  children: []
+  members:
+    - user:default/ana-silva
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: payments-team
+  title: Equipe de pagamentos
+  description: Equipe de pagamentos — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: team
+  profile:
+    displayName: Equipe de pagamentos
+  parent: group:default/commerce
+  children: []
+  members:
+    - user:default/bruno-costa
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform
+  title: Equipe de plataforma
+  description: Equipe de plataforma — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: team
+  profile:
+    displayName: Equipe de plataforma
+  parent: group:default/roadshow
+  children: []
+  members:
+    - user:default/carla-souza
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: ana-silva
+  title: Ana Silva
+  description: Ana Silva — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  profile:
+    displayName: Ana Silva
+  memberOf:
+    - group:default/orders-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: bruno-costa
+  title: Bruno Costa
+  description: Bruno Costa — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  profile:
+    displayName: Bruno Costa
+  memberOf:
+    - group:default/payments-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: carla-souza
+  title: Carla Souza
+  description: Carla Souza — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  profile:
+    displayName: Carla Souza
+  memberOf:
+    - group:default/platform

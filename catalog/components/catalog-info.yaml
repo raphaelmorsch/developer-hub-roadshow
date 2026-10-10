@@ -1,0 +1,83 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: storefront
+  title: Portal de compras
+  description: Portal de compras — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/orders-team
+  system: system:default/orders
+  consumesApis:
+    - api:default/orders-api
+  dependsOn:
+    - component:default/commerce-sdk
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: orders-service
+  title: Serviço de pedidos
+  description: Serviço de pedidos — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/orders-team
+  system: system:default/orders
+  providesApis:
+    - api:default/orders-api
+    - api:default/order-events
+  consumesApis:
+    - api:default/payments-api
+  dependsOn:
+    - resource:default/orders-db
+    - resource:default/orders-events-broker
+    - resource:default/openshift-demo
+    - component:default/commerce-sdk
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: payments-service
+  title: Serviço de pagamentos
+  description: Serviço de pagamentos — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/payments-team
+  system: system:default/payments
+  providesApis:
+    - api:default/payments-api
+  consumesApis:
+    - api:default/order-events
+  dependsOn:
+    - resource:default/payments-db
+    - resource:default/receipts-bucket
+    - resource:default/orders-events-broker
+    - resource:default/openshift-demo
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: commerce-sdk
+  title: Biblioteca de contratos de comércio
+  description: Biblioteca de contratos de comércio — entidade fictícia da
+    demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: library
+  lifecycle: experimental
+  owner: group:default/orders-team
+  system: system:default/orders

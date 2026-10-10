@@ -1,0 +1,38 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: orders
+  title: Gestão de pedidos
+  description: Gestão de pedidos — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  owner: group:default/orders-team
+  domain: domain:default/digital-commerce
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: payments
+  title: Processamento de pagamentos
+  description: Processamento de pagamentos — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  owner: group:default/payments-team
+  domain: domain:default/digital-commerce
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: runtime
+  title: Plataforma de execução
+  description: Plataforma de execução — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  owner: group:default/platform
+  domain: domain:default/engineering

@@ -1,0 +1,170 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: orders-api
+  title: API REST de pedidos
+  description: API REST de pedidos — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: group:default/orders-team
+  system: system:default/orders
+  definition: >
+    openapi: 3.0.3
+
+    info:
+      title: Consulta de pedidos
+      version: 1.0.0
+      description: Contrato fictício para demonstração; não existe backend publicado.
+    servers:
+      - url: https://api.example.com
+    paths:
+      /orders:
+        get:
+          operationId: listOrders
+          summary: Consulta de pedidos
+          responses:
+            "200":
+              description: Lista retornada com sucesso
+              content:
+                application/json:
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Order"
+    components:
+      schemas:
+        Order:
+          type: object
+          required:
+            - id
+            - status
+          properties:
+            id:
+              type: string
+              format: uuid
+            status:
+              type: string
+              enum:
+                - created
+                - paid
+                - cancelled
+            totalInCents:
+              type: integer
+              minimum: 0
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: payments-api
+  title: API REST de pagamentos
+  description: API REST de pagamentos — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: group:default/payments-team
+  system: system:default/payments
+  definition: >
+    openapi: 3.0.3
+
+    info:
+      title: Consulta de pagamentos
+      version: 1.0.0
+      description: Contrato fictício para demonstração; não existe backend publicado.
+    servers:
+      - url: https://api.example.com
+    paths:
+      /payments:
+        get:
+          operationId: listPayments
+          summary: Consulta de pagamentos
+          responses:
+            "200":
+              description: Lista retornada com sucesso
+              content:
+                application/json:
+                  schema:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Payment"
+    components:
+      schemas:
+        Payment:
+          type: object
+          required:
+            - id
+            - status
+          properties:
+            id:
+              type: string
+              format: uuid
+            status:
+              type: string
+              enum:
+                - pending
+                - approved
+                - declined
+            totalInCents:
+              type: integer
+              minimum: 0
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: order-events
+  title: Eventos de pedidos
+  description: Eventos de pedidos — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: asyncapi
+  lifecycle: experimental
+  owner: group:default/orders-team
+  system: system:default/orders
+  definition: |
+    asyncapi: 2.6.0
+    info:
+      title: Eventos de pedidos
+      version: 1.0.0
+      description: Contrato demonstrativo de pedidos criados.
+      license:
+        name: Apache-2.0
+    defaultContentType: application/json
+    servers:
+      demo:
+        url: kafka.example.com:9092
+        protocol: kafka
+    channels:
+      orders.created:
+        description: Pedidos aguardando processamento.
+        publish:
+          operationId: publishOrderCreated
+          summary: Publicar pedido criado
+          message:
+            $ref: "#/components/messages/OrderCreated"
+    components:
+      messages:
+        OrderCreated:
+          name: OrderCreated
+          title: Pedido criado
+          summary: Dados necessários para iniciar o pagamento.
+          contentType: application/json
+          payload:
+            type: object
+            required:
+              - orderId
+              - totalInCents
+            properties:
+              orderId:
+                type: string
+                format: uuid
+              totalInCents:
+                type: integer
+                minimum: 0

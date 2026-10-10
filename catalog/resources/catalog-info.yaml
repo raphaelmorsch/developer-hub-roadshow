@@ -1,0 +1,77 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: openshift-demo
+  title: Cluster OpenShift de demonstração
+  description: Cluster OpenShift de demonstração — entidade fictícia da
+    demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: cluster
+  owner: group:default/platform
+  system: system:default/runtime
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: orders-db
+  title: PostgreSQL de pedidos
+  description: PostgreSQL de pedidos — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: database
+  owner: group:default/orders-team
+  system: system:default/orders
+  dependsOn:
+    - resource:default/openshift-demo
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: payments-db
+  title: PostgreSQL de pagamentos
+  description: PostgreSQL de pagamentos — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: database
+  owner: group:default/payments-team
+  system: system:default/payments
+  dependsOn:
+    - resource:default/openshift-demo
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: receipts-bucket
+  title: Bucket S3 de comprovantes
+  description: Bucket S3 de comprovantes — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: s3-bucket
+  owner: group:default/payments-team
+  system: system:default/payments
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: orders-events-broker
+  title: Broker Kafka de eventos de pedidos
+  description: Broker Kafka de eventos de pedidos — entidade fictícia da
+    demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: message-broker
+  owner: group:default/platform
+  system: system:default/runtime
+  dependsOn:
+    - resource:default/openshift-demo

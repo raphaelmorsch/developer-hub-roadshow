@@ -1,0 +1,8 @@
+# Mescle estas entradas à configuração existente do RHDH/Backstage.
+# Preserve as outras regras e locations já configuradas.
+catalog:
+  rules:
+    - allow: [Location, Domain, System, Resource, API, Component, Group, User]
+  locations:
+    - type: url
+      target: https://github.com/raphaelmorsch/developer-hub-roadshow/blob/main/catalog-info.yaml

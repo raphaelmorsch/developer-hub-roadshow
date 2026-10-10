@@ -1,0 +1,30 @@
+{
+  "name": "developer-hub-roadshow",
+  "version": "1.0.0",
+  "description": "Catálogo demonstrativo para Red Hat Developer Hub e Backstage",
+  "scripts": {
+    "validate": "node scripts/validate-catalog.cjs",
+    "test": "npm run validate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raphaelmorsch/developer-hub-roadshow.git"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/raphaelmorsch/developer-hub-roadshow/issues"
+  },
+  "homepage": "https://github.com/raphaelmorsch/developer-hub-roadshow#readme",
+  "devDependencies": {
+    "@apidevtools/swagger-parser": "^13.1.0",
+    "@asyncapi/parser": "^3.6.3",
+    "@backstage/catalog-model": "^1.10.1",
+    "yaml": "^2.9.1"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  }
+}

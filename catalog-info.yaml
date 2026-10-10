@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: roadshow-catalog
+  title: Catálogo Roadshow
+  description: Catálogo Roadshow — entidade fictícia da demonstração Roadshow.
+  tags:
+    - roadshow
+    - demo
+spec:
+  type: url
+  targets:
+    - ./catalog/organization/catalog-info.yaml
+    - ./catalog/domains/catalog-info.yaml
+    - ./catalog/systems/catalog-info.yaml
+    - ./catalog/resources/catalog-info.yaml
+    - ./catalog/apis/catalog-info.yaml
+    - ./catalog/components/catalog-info.yaml
