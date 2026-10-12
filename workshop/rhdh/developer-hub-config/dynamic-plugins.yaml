@@ -22,3 +22,22 @@ plugins:
                   minutes: 1
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
     disabled: false
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
+    disabled: false
+    pluginConfig:
+      catalog:
+        providers:
+          github:
+            workshop:
+              organization: ${GITHUB_ORG}
+              catalogPath: /catalog-info.yaml
+              filters:
+                branch: main
+                repository: '^developer-hub-roadshow$'
+              schedule:
+                frequency:
+                  minutes: 5
+                initialDelay:
+                  seconds: 30
+                timeout:
+                  minutes: 3
