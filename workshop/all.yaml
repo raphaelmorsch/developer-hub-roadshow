@@ -1,0 +1,21 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: workshop-github
+  title: Workshop Platform Engineering no GitHub
+  description: >
+    Substitui os repositórios GitLab do workshop: templates, TechDocs,
+    domínio Parasol e componentes já existentes.
+spec:
+  type: url
+  targets:
+    - ./global/global-techdocs/catalog-info.yaml
+    - ./rhdh/rhdh-entities/catalog-info.yaml
+    - ./rhdh/template-quarkus-simple/template.yaml
+    - ./rhdh/import-existing-api-template/template.yaml
+    - ./rhdh/import-existing-app-template/template.yaml
+    - ./rhdh/parasol-store-dev-template/template.yaml
+    - ./rhdh/template-developer-self-service/location.yaml
+    - ./parasol/parasol-store/catalog-info.yaml
+    - ./parasol/parasol-store-api/catalog-info.yaml
+    - ./parasol/all-location-parasol/catalog-info.yaml

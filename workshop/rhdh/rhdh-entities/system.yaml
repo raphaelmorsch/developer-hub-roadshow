@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: parasol-system
+  title: Parasol
+  description: Sistema que agrupa a loja Parasol e a API de catálogo.
+spec:
+  owner: group:default/developers
+  domain: parasol

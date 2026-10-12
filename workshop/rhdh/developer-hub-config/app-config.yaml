@@ -1,0 +1,68 @@
+app:
+  title: PE Developer Hub
+  baseUrl: https://backstage-backstage.apps.cluster-5dvsk.dyn.redhatworkshops.io
+organization:
+  name: Parasol
+backend:
+  baseUrl: https://backstage-backstage.apps.cluster-5dvsk.dyn.redhatworkshops.io
+  cors:
+    origin: https://backstage-backstage.apps.cluster-5dvsk.dyn.redhatworkshops.io
+  reading:
+    allow:
+      - host: github.com
+      - host: raw.githubusercontent.com
+auth:
+  environment: production
+  session:
+    secret: ${BACKEND_SECRET}
+  providers:
+    guest:
+      dangerouslyAllowOutsideDevelopment: false
+    oidc:
+      production:
+        prompt: auto
+        metadataUrl: https://sso.apps.cluster-5dvsk.dyn.redhatworkshops.io/realms/backstage/.well-known/openid-configuration
+        clientId: ${KEYCLOAK_CLIENT_ID}
+        clientSecret: ${KEYCLOAK_CLIENT_SECRET}
+        signIn:
+          resolvers:
+            - resolver: preferredUsernameMatchingUserEntityName
+signInPage: oidc
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}
+catalog:
+  rules:
+    - allow:
+        - Component
+        - System
+        - API
+        - Resource
+        - Location
+        - Template
+        - Group
+        - User
+        - Domain
+        - Plugin
+        - Package
+  locations:
+    - type: url
+      target: https://github.com/raphaelmorsch/developer-hub-roadshow/blob/main/workshop/all.yaml
+      rules:
+        - allow:
+            - Component
+            - System
+            - API
+            - Resource
+            - Location
+            - Template
+            - Group
+            - User
+            - Domain
+techdocs:
+  builder: local
+  generator:
+    runIn: local
+  publisher:
+    type: local

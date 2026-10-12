@@ -1,0 +1,139 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: import-existing-app
+  title: Import Existing Application
+  description: Abre um pull request com o catalog-info.yaml de uma aplicação que já existe no GitHub.
+  tags:
+    - component
+    - import
+spec:
+  owner: group:default/platformengineers
+  type: service
+  parameters:
+    - title: Information about your existing application
+      required:
+        - source_repo
+      properties:
+        host:
+          title: GitHub hostname
+          type: string
+          default: github.com
+        source_owner:
+          title: GitHub organization
+          type: string
+          default: raphaelmorsch
+        source_repo:
+          title: Repository name
+          type: string
+          default: developer-hub-roadshow
+    - title: New component details
+      required:
+        - name
+        - system
+        - owner
+      properties:
+        catalog_owner:
+          title: GitHub owner that receives the pull request
+          type: string
+          default: raphaelmorsch
+        catalog_repo:
+          title: Repository that receives the catalog files
+          type: string
+          default: developer-hub-roadshow
+        name:
+          title: Component name
+          type: string
+          default: parasol-store-import
+          ui:field: EntityNamePicker
+        system:
+          title: System
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind: System
+          default: system:default/parasol-system
+        owner:
+          title: Owner
+          type: string
+          ui:field: OwnerPicker
+          default: user:default/dev1
+        description:
+          title: Short description
+          type: string
+          default: Core services for the Parasol application
+    - title: Additional component details
+      properties:
+        has_manifests:
+          title: Does this repo contain manifests?
+          type: boolean
+          default: true
+        component_type:
+          title: Type
+          type: string
+          default: service
+          enum:
+            - service
+            - website
+            - library
+        consumes_apis:
+          title: APIs consumed by this component
+          type: array
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind: API
+          default:
+            - api:default/parasol-store-api
+        add_techdocs:
+          title: Add TechDocs
+          type: boolean
+          default: true
+        lifecycle:
+          title: Lifecycle
+          type: string
+          default: production
+          enum:
+            - experimental
+            - production
+            - deprecated
+  steps:
+    - id: template
+      name: Render catalog files
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: workshop/parasol/all-location-parasol/${{ parameters.name }}
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          component_type: ${{ parameters.component_type }}
+          lifecycle: ${{ parameters.lifecycle }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          source_slug: ${{ parameters.source_owner }}/${{ parameters.source_repo }}
+          source_url: https://${{ parameters.host }}/${{ parameters.source_owner }}/${{ parameters.source_repo }}
+          add_techdocs: ${{ parameters.add_techdocs }}
+          consumes_apis: ${{ parameters.consumes_apis }}
+    - id: publish
+      name: Open pull request
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.catalog_repo }}&owner=${{ parameters.catalog_owner }}
+        branchName: import-app-${{ parameters.name }}
+        targetBranchName: main
+        title: "Add component ${{ parameters.name }} to the catalog"
+        description: Catalog files for ${{ parameters.name }}, opened from Developer Hub.
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        catalogInfoUrl: https://github.com/${{ parameters.catalog_owner }}/${{ parameters.catalog_repo }}/blob/import-app-${{ parameters.name }}/workshop/parasol/all-location-parasol/${{ parameters.name }}/catalog-info.yaml
+  output:
+    links:
+      - title: Pull request
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}

@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.component_id }}
+  description: ${{ values.description }}
+  annotations:
+    github.com/project-slug: ${{ values.destination }}
+    backstage.io/techdocs-ref: dir:.
+    quay.io/repository-slug: ${{ values.image }}
+    # argocd/app-selector: rht-gitops.com/${{ values.gitops_namespace }}=${{ values.owner }}-${{values.component_id}}
+  tags:
+    - quarkus
+    - java
+spec:
+  type: service
+  lifecycle: experimental
+  owner: user:default/${{ values.owner }}
+  providesApis: []

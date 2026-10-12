@@ -1,0 +1,112 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: quarkus-web-template
+  title: Quarkus Service
+  description: Cria um microsserviço Quarkus e publica o código no GitHub.
+  tags:
+    - recommended
+    - java
+    - quarkus
+    - maven
+spec:
+  owner: group:default/platformengineers
+  type: service
+  parameters:
+    - title: Provide Information for Application
+      required:
+        - component_id
+        - java_package_name
+      properties:
+        component_id:
+          title: Name
+          type: string
+          description: Nome único do componente e do repositório GitHub.
+          default: my-quarkus-app
+          ui:field: EntityNamePicker
+          ui:autofocus: true
+          maxLength: 18
+        group_id:
+          title: Group Id
+          type: string
+          default: com.redhat.rhdh
+          description: Maven groupId.
+        artifact_id:
+          title: Artifact Id
+          type: string
+          default: my-quarkus-app
+          description: Maven artifactId.
+        java_package_name:
+          title: Java package
+          type: string
+          default: com.redhat.rhdh
+          description: Pacote Java da classe gerada.
+        description:
+          title: Description
+          type: string
+          default: Quarkus service created from Developer Hub
+    - title: Provide Image Registry Information
+      required:
+        - image_registry
+        - image_organization
+      properties:
+        image_registry:
+          title: Image registry
+          type: string
+          default: quay.io
+          description: Registro de imagem. Este cluster não tem o Quay do workshop; o valor fica só na anotação do componente.
+        image_organization:
+          title: Image organization
+          type: string
+          default: dev1
+          description: Organização ou usuário dono da imagem.
+    - title: Choose a location
+      required:
+        - repo
+      properties:
+        repo:
+          title: Repository location
+          type: object
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            allowedOwners:
+              - raphaelmorsch
+  steps:
+    - id: template
+      name: Fetch Skeleton + Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          component_id: ${{ parameters.component_id }}
+          description: ${{ parameters.description }}
+          group_id: ${{ parameters.group_id }}
+          artifact_id: ${{ parameters.artifact_id }}
+          java_package_name: ${{ parameters.java_package_name }}
+          owner: ${{ user.entity.metadata.name }}
+          destination: ${{ parameters.repo.owner }}/${{ parameters.component_id }}
+          image: ${{ parameters.image_registry }}/${{ parameters.image_organization }}/${{ parameters.component_id }}
+          gitops_namespace: rhdh-gitops
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        repoUrl: ${{ parameters.repo.host }}?owner=${{ parameters.repo.owner }}&repo=${{ parameters.component_id }}
+        repoVisibility: public
+        defaultBranch: main
+        description: ${{ parameters.description }}
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open Component in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}

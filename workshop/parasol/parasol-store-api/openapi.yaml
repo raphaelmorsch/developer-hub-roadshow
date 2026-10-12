@@ -1,0 +1,49 @@
+openapi: 3.0.3
+info:
+  title: Parasol Store API
+  version: 1.0.0
+  description: Catalog API consumed by the Parasol Store application.
+paths:
+  /catalog:
+    get:
+      operationId: listProducts
+      summary: List catalog products
+      responses:
+        "200":
+          description: Products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+  /catalog/count:
+    get:
+      operationId: getProductCount
+      summary: Count catalog products
+      responses:
+        "200":
+          description: Product count
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductCount"
+components:
+  schemas:
+    Product:
+      type: object
+      required:
+        - sku
+        - name
+      properties:
+        sku:
+          type: string
+        name:
+          type: string
+    ProductCount:
+      type: object
+      required:
+        - count
+      properties:
+        count:
+          type: integer

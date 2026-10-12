@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: parasol-store-api
+  title: Parasol Store API
+  description: OpenAPI specification for the parasol-store application.
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: raphaelmorsch/developer-hub-roadshow
+spec:
+  type: openapi
+  lifecycle: production
+  owner: user:default/dev1
+  system: parasol-system
+  definition:
+    $text: ./openapi.yaml

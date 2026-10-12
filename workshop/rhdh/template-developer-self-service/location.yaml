@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: developer-self-service
+  description: Templates de namespace e PostgreSQL usados no self-service do workshop.
+spec:
+  targets:
+    - ./namespace/template-small.yaml
+    - ./namespace/template-large.yaml
+    - ./postgres/template.yaml

@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: parasol-domain-and-system
+  description: Domínio e sistema Parasol usados pelos templates de importação.
+spec:
+  targets:
+    - ./domain.yaml
+    - ./system.yaml

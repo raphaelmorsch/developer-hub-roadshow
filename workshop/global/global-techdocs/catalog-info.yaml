@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: global-techdocs
+  title: Global TechDocs
+  description: Documentação de exemplo publicada com TechDocs a partir deste repositório.
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: raphaelmorsch/developer-hub-roadshow
+  tags:
+    - techdocs
+    - workshop
+spec:
+  type: documentation
+  lifecycle: production
+  owner: group:default/platformengineers

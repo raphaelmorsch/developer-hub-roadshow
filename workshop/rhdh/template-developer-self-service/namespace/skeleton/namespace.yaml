@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${{ values.namespace }}
+  labels:
+    size: ${{ values.size }}
+    requester: ${{ values.requester }}
+    app.kubernetes.io/managed-by: developer-hub
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: ${{ values.namespace }}-quota
+  namespace: ${{ values.namespace }}
+spec:
+  hard:
+    requests.cpu: "${{ values.cpu }}"
+    requests.memory: ${{ values.memory }}
+    limits.cpu: "${{ values.cpu }}"
+    limits.memory: ${{ values.memory }}

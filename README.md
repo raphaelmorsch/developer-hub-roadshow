@@ -4,6 +4,8 @@ Catálogo demonstrativo para **Red Hat Developer Hub (RHDH) / Backstage**, basea
 
 Este repositório descreve software e suas relações; não provisiona infraestrutura nem contém implementações executáveis dos serviços. Pessoas, infraestrutura e endereços `example.com` são fictícios. O ciclo de vida dos componentes e APIs é `experimental`.
 
+A pasta [`workshop/`](workshop/README.md) é independente deste catálogo. Ela substitui os repositórios GitLab do Platform Engineering Workshop e é a Location que o Developer Hub do laboratório deve registrar.
+
 ## Organização do catálogo
 
 | Arquivo | Entidades |

@@ -1,0 +1,59 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: parasol-store-dev-template
+  title: Parasol Store Dev Environment
+  description: Abre um pull request com o manifesto de um ambiente de desenvolvimento da Parasol Store.
+  tags:
+    - parasol
+    - kubernetes
+spec:
+  owner: group:default/platformengineers
+  type: service
+  parameters:
+    - title: Feature environment
+      required:
+        - branch
+        - requester
+      properties:
+        branch:
+          title: Branch name
+          type: string
+          default: my-feature-branch
+          pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+        requester:
+          title: Requester
+          type: string
+          default: dev1
+          description: Usuário do Keycloak que pediu o ambiente.
+        catalog_owner:
+          title: GitHub owner
+          type: string
+          default: raphaelmorsch
+        catalog_repo:
+          title: Repository
+          type: string
+          default: developer-hub-roadshow
+  steps:
+    - id: template
+      name: Render manifest
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: workshop/parasol/parasol-store/deploy/${{ parameters.branch }}
+        values:
+          branch: ${{ parameters.branch }}
+          requester: ${{ parameters.requester }}
+    - id: publish
+      name: Open pull request
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.catalog_repo }}&owner=${{ parameters.catalog_owner }}
+        branchName: env-${{ parameters.branch }}
+        targetBranchName: main
+        title: "Add dev environment ${{ parameters.branch }}"
+        description: Manifest for the Parasol Store feature environment.
+  output:
+    links:
+      - title: Pull request
+        url: ${{ steps.publish.output.remoteUrl }}

@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: all-location-parasol
+  title: Parasol catalog additions
+  description: >
+    Ponto de destino dos templates de importação. As entidades já existentes
+    são registradas por workshop/all.yaml.
+spec:
+  targets: []

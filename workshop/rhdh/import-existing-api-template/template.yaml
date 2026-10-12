@@ -1,0 +1,124 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: import-existing-api
+  title: Import Existing API
+  description: Abre um pull request com o catalog-info.yaml de uma API que já existe no GitHub.
+  tags:
+    - api
+    - import
+spec:
+  owner: group:default/platformengineers
+  type: api
+  parameters:
+    - title: Information about your existing API
+      required:
+        - source_repo
+        - definition_url
+      properties:
+        host:
+          title: GitHub hostname
+          type: string
+          default: github.com
+        source_owner:
+          title: GitHub organization of the existing API
+          type: string
+          default: raphaelmorsch
+        source_repo:
+          title: Repository name of the existing API
+          type: string
+          default: developer-hub-roadshow
+          description: Repositório que já contém a especificação.
+        definition_path:
+          title: API specification path
+          type: string
+          default: workshop/parasol/parasol-store-api/openapi.yaml
+        api_type:
+          title: Type of API
+          type: string
+          default: openapi
+          enum:
+            - openapi
+            - asyncapi
+            - graphql
+    - title: New component details
+      required:
+        - name
+        - system
+        - owner
+      properties:
+        catalog_owner:
+          title: GitHub owner that receives the pull request
+          type: string
+          default: raphaelmorsch
+        catalog_repo:
+          title: Repository that receives the catalog files
+          type: string
+          default: developer-hub-roadshow
+        name:
+          title: API name
+          type: string
+          default: parasol-store-api-import
+          ui:field: EntityNamePicker
+        system:
+          title: System
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind: System
+          default: system:default/parasol-system
+        owner:
+          title: Owner
+          type: string
+          ui:field: OwnerPicker
+          default: user:default/dev1
+        description:
+          title: Short description
+          type: string
+          default: OpenAPI specification for the parasol-store application
+        lifecycle:
+          title: Lifecycle
+          type: string
+          default: production
+          enum:
+            - experimental
+            - production
+            - deprecated
+  steps:
+    - id: template
+      name: Render catalog files
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: workshop/parasol/all-location-parasol/${{ parameters.name }}
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          api_type: ${{ parameters.api_type }}
+          lifecycle: ${{ parameters.lifecycle }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          source_slug: ${{ parameters.source_owner }}/${{ parameters.source_repo }}
+          definition_url: https://raw.githubusercontent.com/${{ parameters.source_owner }}/${{ parameters.source_repo }}/main/${{ parameters.definition_path }}
+    - id: publish
+      name: Open pull request
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.catalog_repo }}&owner=${{ parameters.catalog_owner }}
+        branchName: import-api-${{ parameters.name }}
+        targetBranchName: main
+        title: "Add API ${{ parameters.name }} to the catalog"
+        description: Catalog files for ${{ parameters.name }}, opened from Developer Hub.
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        catalogInfoUrl: https://github.com/${{ parameters.catalog_owner }}/${{ parameters.catalog_repo }}/blob/import-api-${{ parameters.name }}/workshop/parasol/all-location-parasol/${{ parameters.name }}/catalog-info.yaml
+  output:
+    links:
+      - title: Pull request
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}

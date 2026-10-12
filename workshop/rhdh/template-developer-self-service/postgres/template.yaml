@@ -1,0 +1,55 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: postgres-database
+  title: Create a PostgreSQL database
+  description: Abre um pull request com um PostgreSQL de demonstração.
+  tags:
+    - database
+    - self-service
+spec:
+  owner: group:default/platformengineers
+  type: infrastructure
+  parameters:
+    - title: Database
+      required:
+        - name
+        - namespace
+      properties:
+        name:
+          title: Database name
+          type: string
+          default: app-db
+          pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
+        namespace:
+          title: Namespace
+          type: string
+          default: parasol-store-dev
+        storage:
+          title: Storage
+          type: string
+          default: 5Gi
+  steps:
+    - id: template
+      name: Render database
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: workshop/generated/databases/${{ parameters.name }}
+        values:
+          name: ${{ parameters.name }}
+          namespace: ${{ parameters.namespace }}
+          storage: ${{ parameters.storage }}
+    - id: publish
+      name: Open pull request
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=developer-hub-roadshow&owner=raphaelmorsch
+        branchName: database-${{ parameters.name }}
+        targetBranchName: main
+        title: "Add PostgreSQL ${{ parameters.name }}"
+        description: Database manifest requested from Developer Hub.
+  output:
+    links:
+      - title: Pull request
+        url: ${{ steps.publish.output.remoteUrl }}

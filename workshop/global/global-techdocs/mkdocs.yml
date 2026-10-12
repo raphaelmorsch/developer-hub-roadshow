@@ -1,0 +1,5 @@
+site_name: Global TechDocs
+nav:
+  - Home: index.md
+plugins:
+  - techdocs-core

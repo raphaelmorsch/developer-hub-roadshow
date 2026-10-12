@@ -1,0 +1,19 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: parasol-store
+  title: Parasol Store
+  description: Core services for the Parasol application.
+  annotations:
+    github.com/project-slug: raphaelmorsch/developer-hub-roadshow
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - java
+    - parasol
+spec:
+  type: service
+  lifecycle: production
+  owner: user:default/dev1
+  system: parasol-system
+  consumesApis:
+    - parasol-store-api

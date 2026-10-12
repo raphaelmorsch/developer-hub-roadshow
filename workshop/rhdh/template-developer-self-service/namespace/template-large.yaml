@@ -1,0 +1,60 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: namespace-large
+  title: Create a large namespace
+  description: Abre um pull request com um namespace grande.
+  annotations:
+    backstage.io/managed-by: orchestrator
+  tags:
+    - namespace
+    - self-service
+spec:
+  owner: group:default/platformengineers
+  type: infrastructure
+  parameters:
+    - title: Namespace
+      required:
+        - namespace
+        - requester
+      properties:
+        namespace:
+          title: Namespace
+          type: string
+          pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
+        requester:
+          title: Requester
+          type: string
+          default: pe1
+        size:
+          title: Size
+          type: string
+          default: large
+          enum:
+            - large
+  steps:
+    - id: template
+      name: Render namespace
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: workshop/generated/namespaces/${{ parameters.namespace }}
+        values:
+          namespace: ${{ parameters.namespace }}
+          requester: ${{ parameters.requester }}
+          size: ${{ parameters.size }}
+          cpu: "4"
+          memory: 8Gi
+    - id: publish
+      name: Open pull request
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=developer-hub-roadshow&owner=raphaelmorsch
+        branchName: namespace-${{ parameters.namespace }}
+        targetBranchName: main
+        title: "Create namespace ${{ parameters.namespace }}"
+        description: Large namespace requested from Developer Hub.
+  output:
+    links:
+      - title: Pull request
+        url: ${{ steps.publish.output.remoteUrl }}
