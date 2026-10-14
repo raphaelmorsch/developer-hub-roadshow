@@ -27,6 +27,11 @@ auth:
         signIn:
           resolvers:
             - resolver: preferredUsernameMatchingUserEntityName
+    github:
+      production:
+        clientId: ${GITHUB_CLIENT_ID}
+        clientSecret: ${GITHUB_CLIENT_SECRET}
+        disableIdentityResolution: true
 signInPage: oidc
 integrations:
   github:
